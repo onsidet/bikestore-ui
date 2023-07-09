@@ -11,7 +11,6 @@ export class AppComponent implements OnInit{
   title = 'bikestore-ui';
   lists: any[] = [];
   frm!: FormGroup;
-  id!: number;
   constructor(
     private http : HttpClient,
     private fb : FormBuilder
@@ -21,19 +20,6 @@ export class AppComponent implements OnInit{
   ngOnInit(): void {
     this.onInit();
     this.onGet();
-  }
-  edit(id: number){
-    this.id = id;
-    if (id){
-      this.http.get(`https://localhost:9191/api/Category/${id}`).subscribe({
-        next: (res: any) => {
-          this.frm.setValue({
-            name: res.data.name
-          })
-        }
-      })
-    }
-
   }
 
   onGet(){
@@ -51,19 +37,11 @@ export class AppComponent implements OnInit{
       name: [null]
     })
   }
-  onSubmit(edit: boolean = false){
-    if (!edit){
-      this.http.post("https://localhost:9191/api/Category",this.frm.value).subscribe({
-        next: () => {this.onGet()},
-        error: error => console.log(error)
-      })
-    }else {
-      this.http.put(`https://localhost:9191/api/Category/${this.id}`,{...this.frm.value,id: this.id}).subscribe({
-        next: () => {this.onGet()},
-        error: error => console.log(error)
-      })
-    }
-
+  onSubmit(){
+    this.http.post("https://localhost:9191/api/Category",this.frm.value).subscribe({
+      next: () => {this.onGet()},
+      error: error => console.log(error)
+    })
   }
 
 }
